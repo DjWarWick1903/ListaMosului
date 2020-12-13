@@ -3,7 +3,7 @@ package listamosului.managers;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
+//ok
 import listamosului.baseclasses.User;
 
 public class AccountManager {
