@@ -1,0 +1,10 @@
+@charset "ISO-8859-1";
+
+body {
+	background-image: url("../Images/SantaBackgroundImage.jpg");
+	
+}
+
+h1 {
+	color: red;
+}
