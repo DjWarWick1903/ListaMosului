@@ -2,9 +2,76 @@
 
 body {
 	background-image: url("../Images/SantaBackgroundImage.jpg");
-	
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+    background-size: cover;
 }
 
 h1 {
+	color: white;
+	font-family: verdana;
+	text-align: center;
+	font-size: 50px;
+}
+
+hr {
+	border: 100px rgba(0,0,0,1);
+}
+
+input[type=text], 
+input[type=password],
+input[type=date] {
+	width: 70%;
+	height: 40px;
+	padding: 5px 7px;
+	border: 2px solid red;
+	border-radius: 4px;
+	font-size: 20px;
+	color: black;
+}
+
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=date]:focus {
+	background-color: rgba(255,0,0,0.5);
+	color: white;
+}
+
+input[type=submit] {
+	background-color: rgba(255,0,0,0.5);
+	border: none;
+	border-radius: 15px;
+	color: white;
+	padding: 10px 10px;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 30px;
+	width: 30%;
+}
+
+input[type=submit]:hover {
+	background-color: rgba(255,0,0,0.9);
+}
+
+#header {
+	background: rgba(255,0,0,0.5);
+	border-radius: 10px;
+	width: 50%;
+	margin: auto;
+}
+
+#body {
+	text-align: center;
+	border-radius: 10px;
+	background: rgba(255,255,255,0.9);
+	width: 50%;
+	margin: auto;
+}
+
+#body label {
+	font-family: verdana;
+	font-size: 50px;
+	font-weight: bold;
 	color: red;
 }
