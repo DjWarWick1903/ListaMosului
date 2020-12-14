@@ -49,7 +49,7 @@ public class AccountManager {
 		
 		return rowsInserted;
 	}
-	//create function update
+	//function update
 	public int updateAccount(String username, String password, User user) {
 		
 		Connection connection = null;

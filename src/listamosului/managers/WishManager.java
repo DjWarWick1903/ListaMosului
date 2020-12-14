@@ -48,7 +48,7 @@ public class WishManager {
 			
 			return rowsInserted;
 		}
-		//create function update
+		//function update
 		public int updateUser(String lastname, String firstname, String address, String birthday, String isnice ) {
 			
 			Connection connection = null;
