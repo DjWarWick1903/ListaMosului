@@ -1,33 +1,28 @@
 package listamosului.managers;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDate;
-import java.util.LinkedList;
-import listamosului.baseclasses.User;
 
-public class UserManager {
+import listamosului.baseclasses.Wish;
 
-	private static UserManager instance = null;
+public class WishManager {
+
+	private static WishManager instance = null;
+	private ConnectionManager connMan = ConnectionManager.getInstance();
 	
-	private UserManager() {}
+	private WishManager() {}
 	
-	public static UserManager getInstance() {
+	public static WishManager getInstance() {
 		if(instance == null) {
-			instance = new UserManager();
+			instance = new WishManager();
 		}
 		
 		return instance;
 	}
 	
-	ConnectionManager connMan = ConnectionManager.getInstance();
-	
-	public int insertUser(User user) {
-		
+	public int insertWish(Wish wish) {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet keySet = null;
@@ -35,24 +30,17 @@ public class UserManager {
 		
 		try {
 			connection = connMan.openConnection();
-			String sql = "INSERT INTO cm_tr_user(lastname, firstname, address, birthday, isnice) VALUES(?,?,?,?,?)";
+			String sql = "INSERT INTO cm_tr_wishes(wish, id_user) VALUES(?,?)";
 			statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-			statement.setString(1, user.getLastName());
-			statement.setString(2, user.getFirstName());
-			statement.setString(3, user.getAddress());
-			statement.setDate(4, Date.valueOf(user.getBirthday()));
-			if(user.isNice()) {
-				statement.setInt(5, 1);
-			} else {
-				statement.setInt(5, 0);
-			}
+			statement.setString(1, wish.getWish());
+			statement.setInt(2, wish.getIdUser());
 			int rowsInserted = statement.executeUpdate();
 			
 			if(rowsInserted > 0) {
 				keySet = statement.getGeneratedKeys();
 				while(keySet.next()) {
 					key = keySet.getInt(1);
-					user.setId(key);
+					wish.setId(key);
 				}
 			}
 		} catch (SQLException e) {
@@ -68,8 +56,7 @@ public class UserManager {
 		return key;
 	}
 	
-	public int updateUser(User user) {
-		
+	public int updateWish(Wish wish) {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		
@@ -77,18 +64,11 @@ public class UserManager {
 		
 		try {
 			connection = connMan.openConnection();
-			String sql = "UPDATE cm_tr_user SET lastname=?, firstname=?, address=?, birthday=?, isnice=? WHERE id=?";
+			String sql = "UPDATE cm_tr_wishes SET wish=?, id_user=? WHERE id=?";
 			statement = connection.prepareStatement(sql);
-			statement.setString(1, user.getLastName());
-			statement.setString(2, user.getFirstName());
-			statement.setString(3, user.getAddress());
-			statement.setDate(4, Date.valueOf(user.getBirthday()));
-			if(user.isNice()) {
-				statement.setInt(5, 1);
-			} else {
-				statement.setInt(5, 0);
-			}
-			statement.setInt(6, user.getId());
+			statement.setString(1, wish.getWish());
+			statement.setInt(2, wish.getIdUser());
+			statement.setInt(3, wish.getId());
 			rowsUpdated = statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -104,97 +84,35 @@ public class UserManager {
 		return rowsUpdated;
 	}
 	
-	public LinkedList<User> getAllUsers() {
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet userSet = null;
-		LinkedList<User> list = new LinkedList<User>();
-		
-		try {
-			connection = connMan.openConnection();
-			String sql = "SELECT id, lastname, firstname, address, birthday, isnice "
-					+ "FROM cm_tr_user";
-			statement = connection.createStatement();
-			userSet = statement.executeQuery(sql);
-			
-			while(userSet.next()) {
-				int id = userSet.getInt("id");
-				String lastname = userSet.getString("lastname");
-				String firstname = userSet.getString("firstname");
-				String address = userSet.getString("address");
-				LocalDate birthdate = userSet.getDate("birthday").toLocalDate();
-				int isNice = userSet.getInt("isnice");
-				
-				User user = new User();
-				user.setId(id);
-				user.setLastName(lastname);
-				user.setFirstName(firstname);
-				user.setAddress(address);
-				user.setBirthday(birthdate);
-				if(isNice == 1) {
-					user.setNice(true);
-				} else {
-					user.setNice(false);
-				}
-				
-				list.add(user);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				connMan.closeConnection(connection, statement, userSet);
-			}catch(SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return list;
-	}
-	
-	public User getUserById(int id) {
+	public Wish getWishByUserId(int idUser) {
 		Connection connection = null;
 		PreparedStatement statement = null;
-		ResultSet userSet = null;
-		User user = null;
+		ResultSet wishSet = null;
+		Wish wish = null;
 		
 		try {
 			connection = connMan.openConnection();
-			String sql = "SELECT lastname, firstname, address, birthday, isnice "
-					+ "FROM cm_tr_user WHERE id=?";
+			String sql = "SELECT id, wish FROM cm_tr_wishes WHERE id_user=?";
 			statement = connection.prepareStatement(sql);
-			statement.setInt(1, id);
-			userSet = statement.executeQuery();
+			statement.setInt(1, idUser);
+			wishSet = statement.executeQuery();
 			
-			while(userSet.next()) {
-				String lastname = userSet.getString("lastname");
-				String firstname = userSet.getString("firstname");
-				String address = userSet.getString("address");
-				LocalDate birthdate = userSet.getDate("birthday").toLocalDate();
-				int isNice = userSet.getInt("isnice");
+			while(wishSet.next()) {
+				int id = wishSet.getInt(1);
+				String wishStr = wishSet.getString(2);
 				
-				user = new User();
-				user.setId(id);
-				user.setLastName(lastname);
-				user.setFirstName(firstname);
-				user.setAddress(address);
-				user.setBirthday(birthdate);
-				if(isNice == 1) {
-					user.setNice(true);
-				} else {
-					user.setNice(false);
-				}
+				wish = new Wish(id, wishStr, idUser);
 			}
-		} catch (SQLException e) {
+		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				connMan.closeConnection(connection, statement, userSet);
+				connMan.closeConnection(connection, statement, wishSet);
 			}catch(SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		
-		return user;
+		return wish;
 	}
 }
