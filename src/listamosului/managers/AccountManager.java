@@ -7,14 +7,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 import listamosului.baseclasses.Account;
+import listamosului.baseclasses.User;
 
 public class AccountManager {
 
-	private AccountManager instance = null;
+	private static AccountManager instance = null;
 	
 	private AccountManager() {}
 	
-	public AccountManager getInstance() {
+	public static AccountManager getInstance() {
 		if(instance == null) {
 			instance = new AccountManager();
 		}
@@ -110,12 +111,13 @@ public class AccountManager {
 				String password = accountSet.getString("password");
 				int idUser = accountSet.getInt("id_user");
 				
-				//TODO: add user getter
+				User user = UserManager.getInstance().getUserById(idUser);
 				
 				Account account = new Account();
 				account.setId(id);
 				account.setUsername(username);
 				account.setPassword(password);
+				account.setUser(user);
 				
 				list.add(account);
 			}
@@ -130,5 +132,76 @@ public class AccountManager {
 		}
 		
 		return list;
+	}
+	
+	public Account getAccount(String username, String password) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet accountSet = null;
+		Account account = null;
+		
+		try {
+			connection = connMan.openConnection();
+			String sql = "SELECT COUNT id, id_user "
+					+ "FROM cm_tr_account WHERE username=? AND password=?";
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, username);
+			statement.setString(2, password);
+			accountSet = statement.executeQuery();
+			
+			while(accountSet.next()) {
+				int id = accountSet.getInt("id");
+				int idUser = accountSet.getInt("id_user");
+				
+				User user = UserManager.getInstance().getUserById(idUser);
+				
+				account = new Account(id, username, password, user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				connMan.closeConnection(connection, statement, accountSet);
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return account;
+	}
+	
+	public boolean checkIfAccountExists(String username, String password) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet accountSet = null;
+		boolean exists = false;
+		
+		try {
+			connection = connMan.openConnection();
+			String sql = "SELECT COUNT(*) "
+					+ "FROM cm_tr_account WHERE username=? AND password=?";
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, username);
+			statement.setString(2, password);
+			accountSet = statement.executeQuery();
+			
+			while(accountSet.next()) {
+				int nrAcc = accountSet.getInt(1);
+				
+				if(nrAcc > 0) {
+					exists = true;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				connMan.closeConnection(connection, statement, accountSet);
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return exists;
 	}
 }

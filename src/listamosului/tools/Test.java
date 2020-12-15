@@ -1,27 +1,33 @@
 package listamosului.tools;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.sql.Connection;
 
+import listamosului.baseclasses.User;
+import listamosului.managers.AccountManager;
 import listamosului.managers.ConnectionManager;
+import listamosului.managers.UserManager;
 
 public class Test {
 	
 	public static void main(String[] args) {
-		ConnectionManager connMan = ConnectionManager.getInstance();
+//		String firstname = "Popescu";
+//		String lastname = "Robert-Ionut";
+//		String address = "Str. Libertatii nr. 6";
+//		boolean isNice = true;
+//		LocalDate bday = LocalDate.of(1999, 2, 19);
+//		
+//		User user = new User(0, lastname, firstname, address, bday, isNice);
+//		UserManager man = UserManager.getInstance();
+//		
+//		man.insertUser(user);
 		
-		String url = "jdbc:mysql://localhost:3306/craciun";
-		String user = "root";
-		String pass = "robertmaster1";
+		AccountManager accMan = AccountManager.getInstance();
+		String user = "";
+		String pass = "";
 		
-		connMan.writeToFile(url, user, pass);
-		
-		try {
-			Connection conn = connMan.openConnection();
-		} catch(SQLException e) {
-			e.printStackTrace();
-		}
-		
+		System.out.println(accMan.checkIfAccountExists(user, pass));
 	}
 
 }

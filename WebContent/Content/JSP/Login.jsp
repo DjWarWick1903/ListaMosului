@@ -18,9 +18,9 @@
 		<div id="body">
 			<form action="Login_result.jsp" method="POST">
 				<label for="user">Username</label><br><br>
-				<input type="text" id="user" name="user"><br><br>
+				<input type="text" id="user" name="user" required="required"><br><br>
 				<label for="pass">Password</label><br><br>
-				<input type="password" id="pass" name="pass"><br><br>
+				<input type="password" id="pass" name="pass" required="required"><br><br>
 				<input type="submit" name="submitToLog" value="Login">
 			</form>
 			<br>

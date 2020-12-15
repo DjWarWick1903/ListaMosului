@@ -38,8 +38,6 @@ public final class ConnectionManager {
         if (array[0] != null && array[1] != null && array[2] != null) {
             myConn = DriverManager.getConnection(array[0], array[1], array[2]);
         }
-        
-        System.out.println("gata");
 
         return myConn;
     }
@@ -70,7 +68,7 @@ public final class ConnectionManager {
 
     private static String[] readFromFile() {
         String[] array = new String[3];
-        Path path = FileSystems.getDefault().getPath("connection.dat");
+        Path path = FileSystems.getDefault().getPath("D:\\Eclipse-Workspace\\ListaMosului\\connection.dat");
 
         try (DataInputStream locFile = new DataInputStream(new BufferedInputStream(new FileInputStream(path.toAbsolutePath().toString())))) {
             array[0] = locFile.readUTF();

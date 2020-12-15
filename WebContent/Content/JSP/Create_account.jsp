@@ -17,20 +17,22 @@
 		
 		<div id="body">
 			<form action="MainPage.jsp" method="POST">
+				<label for="email">Email</label><br><br>
+				<input type="text" id="email" name="email" required="required" maxlength="30"><br><br>
 				<label for="user">Username</label><br><br>
-				<input type="text" id="user" name="user"><br><br>
+				<input type="text" id="user" name="user" required="required" maxlength="30"><br><br>
 				<label for="pass">Password</label><br><br>
-				<input type="password" id="pass" name="pass"><br><br>
+				<input type="password" id="pass" name="pass" required="required" maxlength="30"><br><br>
 				<label for="lastname">Last name</label><br><br>
-				<input type="text" id="lastname" name="lastname"><br><br>
+				<input type="text" id="lastname" name="lastname" required="required" maxlength="30"><br><br>
 				<label for="firstname">First name</label><br><br>
-				<input type="text" id="firstname" name="firstname"><br><br>
+				<input type="text" id="firstname" name="firstname" required="required" maxlength="30"><br><br>
 				<label for="address">Address</label><br><br>
-				<input type="text" id="address" name="address"><br><br>
+				<input type="text" id="address" name="address" required="required" maxlength="30"><br><br>
 				<label for="birthday">Birthday</label><br><br>
-				<input type="date" id="birthday" name="birthday"><br><br>
+				<input type="date" id="birthday" name="birthday" required="required" maxlength="10"><br><br>
 				
-				<input type="submit" name="submitToLog" value="Login">
+				<input type="submit" name="submitToMain" value="Sign Up">
 			</form>
 			<br>
 			<form action="Login.jsp" method="POST">

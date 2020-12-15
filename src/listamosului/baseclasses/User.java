@@ -1,6 +1,7 @@
 package listamosului.baseclasses;
 
 import java.time.LocalDate;
+import java.util.Random;
 
 public class User {
 

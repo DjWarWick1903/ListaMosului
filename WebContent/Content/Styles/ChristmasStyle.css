@@ -75,3 +75,10 @@ input[type=submit]:hover {
 	font-weight: bold;
 	color: red;
 }
+
+#body h2 {
+	color: red;
+	font-family: verdana;
+	text-align: center;
+	font-size: 30px;
+}
