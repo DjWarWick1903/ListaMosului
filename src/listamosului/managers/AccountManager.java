@@ -2,8 +2,10 @@ package listamosului.managers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-//ok
+import java.sql.Statement;
+import java.util.LinkedList;
 import listamosului.baseclasses.Account;
 
 public class AccountManager {
@@ -21,36 +23,45 @@ public class AccountManager {
 	}
 	
 	ConnectionManager connMan = ConnectionManager.getInstance();
-	//create function insert
-	public int insertAccount(String username, String password, User user) {
+	
+	public int insertAccount(Account account) {
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
+		ResultSet keySet = null;
 		
-		int rowsInserted = 0;
+		int key = 0;
 		
 		try {
 			connection = connMan.openConnection();
-			String sql = "INSERT INTO 'account'('username', 'password', 'id_user') VALUES(?,?,?)";
-			statement = connection.prepareStatement(sql);
-			statement.setString(1, username);
-			statement.setString(2, password);
-			// statement.setInt(3, user); TODO: scrie metoda user.getId() 
-			rowsInserted = statement.executeUpdate();
+			String sql = "INSERT INTO cm_tr_account(username, password, id_user) VALUES(?,?,?)";
+			statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+			statement.setString(1, account.getUsername());
+			statement.setString(2, account.getPassword());
+			statement.setInt(3, account.getUser().getId());
+			int rowsInserted = statement.executeUpdate();
+			
+			if(rowsInserted > 0) {
+				keySet = statement.getGeneratedKeys();
+				while(keySet.next()) {
+					key = keySet.getInt(1);
+					account.setId(key);
+				}
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				connMan.closeConnection(connection, statement);
+				connMan.closeConnection(connection, statement, keySet);
 			} catch(SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		
-		return rowsInserted;
+		return key;
 	}
-	//function update
-	public int updateAccount(String username, String password, User user) {
+	
+	public int updateAccount(Account account) {
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -59,11 +70,12 @@ public class AccountManager {
 		
 		try {
 			connection = connMan.openConnection();
-			String sql = "UPDATE 'account' SET 'username'=?, 'password'=?, 'id_user'=? WHERE 'id'=?";
-			statement = connection.preparedStatement(sql);
-			statement.setString(1, username);
-			statement.setString(2, password);
-			//statement.setString(3, user)
+			String sql = "UPDATE cm_tr_account SET username=?, password=?, id_user=? WHERE id=?";
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, account.getUsername());
+			statement.setString(2, account.getPassword());
+			statement.setInt(3, account.getUser().getId());
+			statement.setInt(4, account.getId());
 			rowsUpdated = statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -75,6 +87,48 @@ public class AccountManager {
 			}
 			
 		}
+		
 		return rowsUpdated;
+	}
+	
+	public LinkedList<Account> getAllAccounts() {
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet accountSet = null;
+		LinkedList<Account> list = new LinkedList<Account>();
+		
+		try {
+			connection = connMan.openConnection();
+			String sql = "SELECT id, username, password, id_user "
+					+ "FROM cm_tr_account";
+			statement = connection.createStatement();
+			accountSet = statement.executeQuery(sql);
+			
+			while(accountSet.next()) {
+				int id = accountSet.getInt("id");
+				String username = accountSet.getString("username");
+				String password = accountSet.getString("password");
+				int idUser = accountSet.getInt("id_user");
+				
+				//TODO: add user getter
+				
+				Account account = new Account();
+				account.setId(id);
+				account.setUsername(username);
+				account.setPassword(password);
+				
+				list.add(account);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				connMan.closeConnection(connection, statement, accountSet);
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return list;
 	}
 }

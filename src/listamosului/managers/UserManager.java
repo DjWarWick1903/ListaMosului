@@ -22,7 +22,7 @@ public class UserManager {
 	
 	ConnectionManager connMan = ConnectionManager.getInstance();
 	//create function insert
-	public int insertUser(String lastname, String firstname, String address, String birthday, String isnice ) {
+	public int insertUser(String lastName, String firstName, String address, LocalDate birthday, boolean isnice ) {
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
