@@ -1,24 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import= "listamosului.managers.UserManager, listamosului.managers.AccountManager" %>
-<%@ page import= "listamosului.baseclasses.Account, listamosului.baseclasses.User" %>
+<%@ page import= "listamosului.managers.UserManager, listamosului.managers.AccountManager, listamosului.managers.WishManager" %>
+<%@ page import= "listamosului.baseclasses.Account, listamosului.baseclasses.User, listamosului.baseclasses.Wish" %>
 <%@ page import= "java.sql.*, java.util.*, java.io.*, javax.servlet.http.*,javax.servlet.*" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="ISO-8859-1">
-		<title>Login Result</title>
+		<title>Lista lui Mos Craciun</title>
 		<link rel="stylesheet" type="text/css" href="../Styles/ChristmasStyle.css"/>
 	</head>
 	
 	<body>
 		<div id="header">
 			<hr>
-			<h1>Sign up</h1>
+			<h1>Rezultat logare</h1>
 			<hr>
 		</div>
 		
 		<div id="body">
+		<hr>
 			<%
 				String user = request.getParameter("user");
 				String pass = request.getParameter("pass");
@@ -31,7 +32,9 @@
 					if(account != null) {
 						goToMainPage = true;
 						session.setAttribute("account", account);
-						out.print("<h3> Bine ai venit " + account.getUser().getLastName() + " " + account.getUser().getFirstName() + "! </h3 <br>");
+						Wish wish = WishManager.getInstance().getWishByUserId(account.getUser().getId());
+						session.setAttribute("wish", wish);
+						out.print("<h2> Bine ai venit " + account.getUser().getLastName() + " " + account.getUser().getFirstName() + "! </h2 <br>");
 					}
 				} 
 				
@@ -56,6 +59,7 @@
 			<%
 				}
 			%>
+			<hr>
 		</div>
 	</body>
 </html>

@@ -4,23 +4,27 @@
 <html>
 	<head>
 		<meta charset="ISO-8859-1">
-		<title>Sign In</title>
+		<title>Lista lui Mos Craciun</title>
 		<link rel="stylesheet" type="text/css" href="../Styles/ChristmasStyle.css"/>
 	</head>
 	
+	<%
+		session.removeAttribute("account");
+		session.removeAttribute("wish");
+	%>
 	<body>	
 		<div id="header">
 			<hr>
-			<h1>Sign in</h1>
+			<h1>Logare</h1>
 			<hr>
 		</div>
 		
 		<div id="body">
 			<form action="Login_result.jsp" method="POST">
-				<label for="user">Username</label><br><br>
+				<label for="user">Nume utilizator</label><br><br>
 				<input type="text" id="user" name="user" required="required"><br><br>
-				<label for="pass">Password</label><br><br>
-				<input type="password" id="pass" name="pass" required="required"><br><br>
+				<label for="pass">Parola</label><br><br>
+				<input type="password" id="pass" name="pass" required="required" title="Acest camp este obligatoriu ar trebui sa contina macar un caracter din ?!+_"><br><br>
 				<input type="submit" name="submitToLog" value="Login">
 			</form>
 			<br>

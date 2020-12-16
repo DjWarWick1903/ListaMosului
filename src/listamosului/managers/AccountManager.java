@@ -35,11 +35,12 @@ public class AccountManager {
 		
 		try {
 			connection = connMan.openConnection();
-			String sql = "INSERT INTO cm_tr_account(username, password, id_user) VALUES(?,?,?)";
+			String sql = "INSERT INTO cm_tr_account(email, username, password, id_user) VALUES(?,?,?,?)";
 			statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-			statement.setString(1, account.getUsername());
-			statement.setString(2, account.getPassword());
-			statement.setInt(3, account.getUser().getId());
+			statement.setString(1, account.getEmail());
+			statement.setString(2, account.getUsername());
+			statement.setString(3, account.getPassword());
+			statement.setInt(4, account.getUser().getId());
 			int rowsInserted = statement.executeUpdate();
 			
 			if(rowsInserted > 0) {
@@ -71,12 +72,13 @@ public class AccountManager {
 		
 		try {
 			connection = connMan.openConnection();
-			String sql = "UPDATE cm_tr_account SET username=?, password=?, id_user=? WHERE id=?";
+			String sql = "UPDATE cm_tr_account SET email=?, username=?, password=?, id_user=? WHERE id=?";
 			statement = connection.prepareStatement(sql);
-			statement.setString(1, account.getUsername());
-			statement.setString(2, account.getPassword());
-			statement.setInt(3, account.getUser().getId());
-			statement.setInt(4, account.getId());
+			statement.setString(1, account.getEmail());
+			statement.setString(2, account.getUsername());
+			statement.setString(3, account.getPassword());
+			statement.setInt(4, account.getUser().getId());
+			statement.setInt(5, account.getId());
 			rowsUpdated = statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -100,13 +102,14 @@ public class AccountManager {
 		
 		try {
 			connection = connMan.openConnection();
-			String sql = "SELECT id, username, password, id_user "
+			String sql = "SELECT id, email, username, password, id_user "
 					+ "FROM cm_tr_account";
 			statement = connection.createStatement();
 			accountSet = statement.executeQuery(sql);
 			
 			while(accountSet.next()) {
 				int id = accountSet.getInt("id");
+				String email = accountSet.getString("email");
 				String username = accountSet.getString("username");
 				String password = accountSet.getString("password");
 				int idUser = accountSet.getInt("id_user");
@@ -115,6 +118,7 @@ public class AccountManager {
 				
 				Account account = new Account();
 				account.setId(id);
+				account.setEmail(email);
 				account.setUsername(username);
 				account.setPassword(password);
 				account.setUser(user);
@@ -142,7 +146,7 @@ public class AccountManager {
 		
 		try {
 			connection = connMan.openConnection();
-			String sql = "SELECT COUNT id, id_user "
+			String sql = "SELECT id, email, id_user "
 					+ "FROM cm_tr_account WHERE username=? AND password=?";
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, username);
@@ -152,10 +156,11 @@ public class AccountManager {
 			while(accountSet.next()) {
 				int id = accountSet.getInt("id");
 				int idUser = accountSet.getInt("id_user");
+				String email = accountSet.getString("email");
 				
 				User user = UserManager.getInstance().getUserById(idUser);
 				
-				account = new Account(id, username, password, user);
+				account = new Account(id, email, username, password, user);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
