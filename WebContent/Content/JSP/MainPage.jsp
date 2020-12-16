@@ -40,8 +40,8 @@
 			<h2>Anul acesta ai fost <%= cuminte %></h2>
 			
 			<h2>Scrie-i o scrisoare lui Mos Craciun:</h2>
-			
-			<textarea class="wisharea" name="wisharea" rows="25" cols="40" style="font-size: 20px;">
+			<form action="Wish_is_sent.jsp" method="POST">
+			<textarea class="wisharea" id="wisharea" name="wisharea" rows="25" cols="40" style="font-size: 20px;">
 			<%
 				Wish wish = (Wish) session.getAttribute("wish");
 				if(wish != null) {
@@ -52,7 +52,7 @@
 			%>
 			</textarea> 
 			<br><hr>
-			<form action="Wish_is_sent.jsp" method="POST">
+			
 				<input type="submit" name="submitWish" value="Trimite">
 			</form>
 			<br>

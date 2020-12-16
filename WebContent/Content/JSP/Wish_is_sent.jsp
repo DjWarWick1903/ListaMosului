@@ -21,6 +21,7 @@
 		}
 	} else {
 		int updated = WishManager.getInstance().updateWish(wish);
+		System.out.println(updated);
 		
 		if(updated > 0) {
 			session.setAttribute("wish", wish);
