@@ -20,11 +20,13 @@
 			session.setAttribute("wish", wish);
 		}
 	} else {
+		wish.setWish(wishText);
 		int updated = WishManager.getInstance().updateWish(wish);
 		System.out.println(updated);
 		
 		if(updated > 0) {
 			session.setAttribute("wish", wish);
+			System.out.println("aici");
 		}
 	}
 	
